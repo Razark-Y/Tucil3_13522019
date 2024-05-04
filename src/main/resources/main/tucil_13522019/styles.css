@@ -1,0 +1,17 @@
+.root {
+    -fx-background-color: #FBEBD8;
+}
+
+.grid-pane {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-control-inner-background: #2A8278;
+    -fx-prompt-text-fill: #CCCCCC;
+    -fx-pref-height: 200;
+    -fx-pref-width: 200;
+}
+
+.text-field {
+    -fx-control-inner-background: #2A8278;
+    -fx-prompt-text-fill: #CCCCCC;
+}
