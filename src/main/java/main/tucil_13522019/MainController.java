@@ -14,12 +14,18 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 public class MainController {
     private static WordLadder wordLadder;
     private static WordLadderGreedy wordLadderGreedy;
+    private static WordLadderUCS wordLadderUCS;
+    String selectedAlgorithm;
     String startWord;
     String endWord;
+    SimpleEntry<List<String>, Integer> result;
+    @FXML
+    private ComboBox<String> algorithmChoice;
     @FXML
     private Label messageLabel; 
     @FXML
@@ -40,6 +46,7 @@ public class MainController {
     private void onRectangleClicked() {
         startWord = StartInput.getText().trim().toLowerCase();
         endWord = TargetInput.getText().trim().toLowerCase();
+        selectedAlgorithm = algorithmChoice.getValue();
         if (startWord.isEmpty() || endWord.isEmpty()) {
             messageLabel.setText("Error: Both fields must be filled.");
             return;
@@ -55,25 +62,42 @@ public class MainController {
     @FXML
     private void initialize(){
         try{
+            algorithmChoice.getItems().addAll("UCS", "GBFS");
             Set<String> dict = DictionaryLoader.loadDictionary("src/main/resources/main/tucil_13522019/Dict.txt");
             wordLadderGreedy = new WordLadderGreedy(dict);
+            wordLadderUCS = new WordLadderUCS(dict);
         }catch (IOException e){
             messageLabel.setText("Dictionary Not Set Properly");
         }
     }
-
+    @FXML
     private void findPath() {
+        long startTime = System.nanoTime();  // Start timing
         try {
-            SimpleEntry<List<String>, Integer> result = wordLadderGreedy.findLadder(startWord, endWord);
+            switch (selectedAlgorithm) {
+                case "UCS":
+                    result = wordLadderUCS.findLadder(startWord, endWord);
+                    break;
+                case "GBFS":
+                    result = wordLadderGreedy.findLadder(startWord, endWord);
+                    break;
+                // case "A*":
+                //     result = wordLadderAStar.findLadder(startWord, endWord);
+                //     break;
+                default:
+                    throw new IllegalArgumentException("Invalid algorithm selection");
+            }
+            long endTime = System.nanoTime();  // End timing
+            long duration = (endTime - startTime) / 1_000_000;  // Convert nanoseconds to milliseconds
+
             List<String> path = result.getKey();
             int nodesVisited = result.getValue();
-            System.out.println("initial:"+path);
             if (path.isEmpty()) {
-                messageLabel.setText("No ladder found.");
+                messageLabel.setText("No ladder found. Time taken: " + duration + " ms");
                 return;
             }
-            updateResultGrid(path); 
-            messageLabel.setText("Found ladder with " + nodesVisited + " nodes visited.");
+            updateResultGrid(path);
+            messageLabel.setText("Found ladder with " + nodesVisited + " nodes visited. Time taken: " + duration + " ms");
         } catch (Exception e) {
             messageLabel.setText("Failed to find ladder: " + e.getMessage());
         }

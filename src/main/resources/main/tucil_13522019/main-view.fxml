@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.tucil_13522019.MainController">
+<ScrollPane fitToHeight="true" fitToWidth="true" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.tucil_13522019.MainController" styleClass='main'>
    <content>
       <VBox alignment="TOP_CENTER" prefHeight="497.0" prefWidth="619.0">
          <padding>
@@ -113,7 +113,7 @@
                         <Insets />
                      </FlowPane.margin>
                   </StackPane>
-                  <ComboBox prefHeight="30.0" prefWidth="150.0" />
+                  <ComboBox prefHeight="30.0" prefWidth="150.0" fx:id="algorithmChoice" />
                </children>
                <VBox.margin>
                   <Insets top="10.0" />
