@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 public class DictionaryLoader {
     private Set<String> dictionary;
-    private String start;
-    private String end;
 
     public static Set<String> loadDictionary(String dictFile) throws IOException {
         Set<String> dict = new HashSet<>();

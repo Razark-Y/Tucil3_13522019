@@ -17,10 +17,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.Screen;
 public class Main extends Application {
-    private static WordLadder wordLadder;
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // initializeWordLadder("path/to/dictionary.txt");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/tucil_13522019/main-view.fxml"));
         Parent root = loader.load(); 
         primaryStage.setTitle("Dynamic Grid Application");
@@ -29,15 +27,6 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.setFullScreenExitHint("");
         primaryStage.show();
-    }
-    private void initializeWordLadder(String dictFile) {
-        try {
-            wordLadder = new WordLadder(dictFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle the exception or exit if necessary
-            System.exit(1);
-        }
     }
     public static void main(String[] args) {
         launch(args); 

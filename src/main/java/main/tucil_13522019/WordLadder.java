@@ -5,7 +5,7 @@ public class WordLadder {
     protected Set<String> dictionary;
     protected String start;
     protected String end;
-    public WordLadder(String dictFile) throws IOException {
-        this.dictionary = DictionaryLoader.loadDictionary(dictFile);
+    public WordLadder(Set<String> dictFile) throws IOException {
+        this.dictionary = dictFile;
 }
 }

@@ -1,71 +1,119 @@
 package main.tucil_13522019;
 
+import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.List;
+import java.util.Set;
+
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.control.Label;
 public class MainController {
-
+    private static WordLadder wordLadder;
+    private static WordLadderGreedy wordLadderGreedy;
+    String startWord;
+    String endWord;
+    @FXML
+    private Label messageLabel; 
+    @FXML
+    private TextField StartInput;
+    @FXML
+    private TextField TargetInput;
+    @FXML
+    private StackPane clickableArea,ResultArea;
     @FXML
     private TextField widthInput;
-
+    @FXML
+    private GridPane resultGrid;
     @FXML
     private GridPane grid;
     @FXML
     private Label rectangleLabel;
-    // Arrays to hold the TextFields for start and target inputs
-    private TextField[] startInputs;
-    private TextField[] targetInputs;
     @FXML
     private void onRectangleClicked() {
-        generateGrid();  // Generate grid when rectangle is clicked
-        rectangleLabel.setText("Generating...");  // Change text on rectangle label
+        startWord = StartInput.getText().trim().toLowerCase();
+        endWord = TargetInput.getText().trim().toLowerCase();
+        if (startWord.isEmpty() || endWord.isEmpty()) {
+            messageLabel.setText("Error: Both fields must be filled.");
+            return;
+        }
+
+        if (startWord.length() != endWord.length()) {
+            messageLabel.setText("Error: Words must be of the same length.");
+            return;
+        }
+        messageLabel.setText("Enjoy the results below!!");
+        findPath();
     }
     @FXML
-    private void generateGrid() {
-        grid.getChildren().clear();  // Clear existing content in the grid
-
-        int width = Integer.parseInt(widthInput.getText());  // Number of columns
-
-        startInputs = new TextField[width];  // Initialize arrays to hold TextFields
-        targetInputs = new TextField[width];
-
-        // Create two rows of TextFields
-        for (int j = 0; j < width; j++) {
-            createTextFieldForRow(startInputs, j, 0);  // Row 0 for start inputs
-            createTextFieldForRow(targetInputs, j, 1);  // Row 1 for target inputs
+    private void initialize(){
+        try{
+            Set<String> dict = DictionaryLoader.loadDictionary("src/main/resources/main/tucil_13522019/Dict.txt");
+            wordLadderGreedy = new WordLadderGreedy(dict);
+        }catch (IOException e){
+            messageLabel.setText("Dictionary Not Set Properly");
         }
     }
 
-    // Helper method to create a TextField and place it in the grid
-    private void createTextFieldForRow(TextField[] row, int columnIndex, int rowIndex) {
-        TextField textField = new TextField();
-        textField.setPrefWidth(100);
-        textField.setMaxWidth(100);
-        textField.setPrefHeight(100);
-        textField.setMaxHeight(100);
-        GridPane.setConstraints(textField, columnIndex, rowIndex);
-        grid.getChildren().add(textField);
-        row[columnIndex] = textField;  // Store the TextField in the array
-    }
-
-    // Method to convert the contents of TextFields to a string array
-    @SuppressWarnings("exports")
-    public String[] getTextFromRow(TextField[] row) {
-        String[] texts = new String[row.length];
-        for (int i = 0; i < row.length; i++) {
-            texts[i] = row[i].getText();  // Get text from each TextField
+    private void findPath() {
+        try {
+            SimpleEntry<List<String>, Integer> result = wordLadderGreedy.findLadder(startWord, endWord);
+            List<String> path = result.getKey();
+            int nodesVisited = result.getValue();
+            System.out.println("initial:"+path);
+            if (path.isEmpty()) {
+                messageLabel.setText("No ladder found.");
+                return;
+            }
+            updateResultGrid(path); 
+            messageLabel.setText("Found ladder with " + nodesVisited + " nodes visited.");
+        } catch (Exception e) {
+            messageLabel.setText("Failed to find ladder: " + e.getMessage());
         }
-        return texts;
     }
-
-    // Example method that could be called to handle the strings
-    public void processInput() {
-        String[] startTexts = getTextFromRow(startInputs);
-        String[] targetTexts = getTextFromRow(targetInputs);
-
-        // Here you could further process these strings or display them
-        System.out.println("Start Inputs: " + String.join(", ", startTexts));
-        System.out.println("Target Inputs: " + String.join(", ", targetTexts));
+    private void updateResultGrid(List<String> results) {
+        resultGrid.getChildren().clear();
+        if (results.isEmpty()) return;
+    
+        int numRows = results.size();
+        int numCols = results.stream().mapToInt(String::length).max().orElse(0);
+        resultGrid.getColumnConstraints().clear();
+        for (int col = 0; col < numCols; col++) {
+            ColumnConstraints cc = new ColumnConstraints(50);
+            resultGrid.getColumnConstraints().add(cc);
+        }
+    
+        resultGrid.getRowConstraints().clear();
+        for (int row = 0; row < numRows; row++) {
+            RowConstraints rc = new RowConstraints(50);
+            resultGrid.getRowConstraints().add(rc);
+        }
+    
+        for (int i = 0; i < numRows; i++) {
+            String word = results.get(i);
+            // System.out.println(word);
+            for (int j = 0; j < word.length(); j++) {
+                // System.out.println("Adding text: " + word.charAt(j));
+                TextField textField = new TextField(Character.toString(word.charAt(j)).toUpperCase());
+                textField.setEditable(false);
+                textField.setAlignment(Pos.CENTER);
+                textField.setMinWidth(80);  
+                textField.setMinHeight(80);  
+                textField.setFont(Font.font("Cooper Black", 36));
+                resultGrid.add(textField, j, i);
+                // textField.setStyle("-fx-text-fill: white; -fx-control-inner-background: #333;");
+            }
+        }
     }
+    
+    
+
+    
 }

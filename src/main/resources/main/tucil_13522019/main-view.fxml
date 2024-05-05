@@ -1,70 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="497.0" prefWidth="619.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.tucil_13522019.MainController">
-    <padding>
-        <Insets bottom="10" left="10" right="10" top="10" />
-    </padding>
-    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" text="Word Ladder Game" textFill="#0c4d46">
-         <font>
-            <Font name="Cooper Black" size="25.0" />
-         </font>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
+<ScrollPane fitToHeight="true" fitToWidth="true" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.tucil_13522019.MainController">
+   <content>
+      <VBox alignment="TOP_CENTER" prefHeight="497.0" prefWidth="619.0">
          <padding>
-            <Insets bottom="20.0" />
+            <Insets bottom="10" left="10" right="10" top="10" />
          </padding>
-      </Label>
-      <FlowPane alignment="CENTER" hgap="40.0" prefHeight="31.0" prefWidth="598.0">
          <children>
-            <Label alignment="TOP_LEFT" text="Number Of Words:" textFill="#0c4d46">
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Word Ladder Game" textFill="#0c4d46">
                <font>
-                  <Font name="Cooper Black" size="19.0" />
+                  <Font name="Cooper Black" size="25.0" />
                </font>
                <opaqueInsets>
-                  <Insets right="30.0" />
+                  <Insets />
                </opaqueInsets>
                <padding>
-                  <Insets left="10.0" />
+                  <Insets bottom="20.0" />
                </padding>
             </Label>
-              <TextField fx:id="widthInput" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="310.0" promptText="Enter width" text="3">
-               <opaqueInsets>
-                  <Insets left="30.0" />
-               </opaqueInsets>
-            </TextField>
+            <FlowPane alignment="CENTER" hgap="40.0" prefHeight="10.0" prefWidth="598.0">
+               <children>
+                  <Label alignment="TOP_LEFT" text="Start Word" textFill="#0c4d46">
+                     <font>
+                        <Font name="Cooper Black" size="19.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets right="30.0" />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="StartInput" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="310.0" promptText="Enter Start Word">
+                     <opaqueInsets>
+                        <Insets left="30.0" />
+                     </opaqueInsets>
+                     <FlowPane.margin>
+                        <Insets right="15.0" />
+                     </FlowPane.margin>
+                     <font>
+                        <Font name="Cooper Black" size="15.0" />
+                     </font>
+                  </TextField>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" />
+               </padding>
+            </FlowPane>
+            <FlowPane alignment="CENTER" hgap="40.0" prefHeight="34.0" prefWidth="598.0">
+               <children>
+                  <Label alignment="TOP_LEFT" text="End Word  " textFill="#0c4d46">
+                     <font>
+                        <Font name="Cooper Black" size="19.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets right="30.0" />
+                     </opaqueInsets>
+                  </Label>
+                  <TextField fx:id="TargetInput" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="310.0" promptText="Enter Target Word">
+                     <opaqueInsets>
+                        <Insets left="30.0" />
+                     </opaqueInsets>
+                     <font>
+                        <Font name="Cooper Black" size="15.0" />
+                     </font>
+                  </TextField>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" />
+               </padding>
+            </FlowPane>
+            <FlowPane alignment="CENTER" prefHeight="19.0" prefWidth="598.0">
+               <children>
+                  <Label text="Note: Set Input And Output According To ReadMe" textFill="#0c4d46" fx:id="messageLabel">
+                     <font>
+                        <Font name="Cooper Black" size="14.0" />
+                     </font>
+                     <FlowPane.margin>
+                        <Insets />
+                     </FlowPane.margin>
+                  </Label>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER" hgap="30.0" prefHeight="24.0" prefWidth="598.0">
+               <children>
+                  <StackPane fx:id="clickableArea" alignment="CENTER" onMouseClicked="#onRectangleClicked">
+                        <Rectangle arcHeight="10" arcWidth="10" fill="#0c4d46" height="30.0" width="120">
+                        <StackPane.margin>
+                           <Insets />
+                        </StackPane.margin>
+                     </Rectangle>
+                        <Label fx:id="rectangleLabel" text="Generate" textFill="#2a8278">
+                           <font>
+                              <Font name="Cooper Black" size="14.0" />
+                           </font>
+                        </Label>
+                     <FlowPane.margin>
+                        <Insets />
+                     </FlowPane.margin>
+                  </StackPane>
+                  <ComboBox prefHeight="30.0" prefWidth="150.0" />
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </FlowPane>
+            <GridPane fx:id="resultGrid" alignment="CENTER" styleClass="grid-result" stylesheets="@styles.css">
+                <padding>
+                    <Insets top="40" bottom="20"/> 
+                </padding>
+            </GridPane>
          </children>
-         <padding>
-            <Insets bottom="20.0" />
-         </padding>
-      </FlowPane>
-        <StackPane fx:id="clickableArea" alignment="CENTER" onMouseClicked="#onRectangleClicked" xmlns:fx="http://javafx.com/fxml/1">
-            <Rectangle arcHeight="10" arcWidth="10" fill="#0c4d46" height="30.0" width="120">
-            <StackPane.margin>
-               <Insets />
-            </StackPane.margin></Rectangle>
-            <Label fx:id="rectangleLabel" text="Generate" textFill="#2a8278">
-                <font>
-                    <Font name="Cooper Black" size="14.0" />
-                </font>
-            </Label>
-        </StackPane>
-        <GridPane fx:id="grid" alignment="CENTER" styleClass="grid-pane" stylesheets="@styles.css">
-            <padding>
-                <Insets top="20.0" />
-            </padding>
-            <!-- GridPane where the dynamic grid will be displayed -->
-        </GridPane>
-    </children>
-</VBox>
+      </VBox>
+    </content>
+</ScrollPane>
