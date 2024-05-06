@@ -64,7 +64,7 @@ public SimpleEntry<List<String>, Integer> findLadder(String start, String end) {
             }
             chars[i] = originalChar; 
         }
-        System.out.println(neighbors);
+        // System.out.println(neighbors);
         return neighbors;
     }
     private static class Node {
