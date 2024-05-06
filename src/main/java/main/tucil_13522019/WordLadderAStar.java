@@ -48,6 +48,10 @@ public class WordLadderAStar extends WordLadder {
 
         while (!queue.isEmpty()) {
             Node current = queue.poll();
+
+            if (current.g > bestCosts.get(current.word)) {
+                continue; 
+            }
             nodesVisited++;
 
             if (current.word.equals(end)) {

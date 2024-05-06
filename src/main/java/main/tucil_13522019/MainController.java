@@ -104,7 +104,7 @@ public class MainController {
             List<String> path = result.getKey();
             int nodesVisited = result.getValue();
             if (path.isEmpty()) {
-                messageLabel.setText(String.format("No ladder found."));
+                messageLabel.setText(String.format("No ladder found (%d nodes visited. Time taken: %d ms. Memory used: %d bytes)", nodesVisited, duration, memoryUsed));
                 return;
             }
             updateResultGrid(path);
@@ -153,7 +153,7 @@ public class MainController {
                 } else if (endWord.contains(String.valueOf(letter))) {
                     textField.setStyle("-fx-background-color: #ffdf00; -fx-text-fill: white;");
                 } else {
-                    textField.setStyle("-fx-background-color: ##2A8278; -fx-text-fill: white;"); 
+                    textField.setStyle("-fx-background-color: #2A8278; -fx-text-fill: white;"); 
                 }
 
                 resultGrid.add(textField, j + 1, i);
