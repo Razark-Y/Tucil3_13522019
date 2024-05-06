@@ -21,6 +21,7 @@ public class MainController {
     private static WordLadderGreedy wordLadderGreedy;
     private static WordLadderUCS wordLadderUCS;
     private static WordLadderAStar wordLadderAStar;
+    private static Set<String> dict;
     String selectedAlgorithm;
     String startWord;
     String endWord;
@@ -57,6 +58,10 @@ public class MainController {
             messageLabel.setText("Error: Words must be of the same length.");
             return;
         }
+        if (!dict.contains(startWord) || !dict.contains(endWord)) {
+            messageLabel.setText("Error: Both start and end words must be in the dictionary.");
+            return;
+        }
         messageLabel.setText("Enjoy the results below!!");
         findPath();
     }
@@ -64,7 +69,7 @@ public class MainController {
     private void initialize(){
         try{
             algorithmChoice.getItems().addAll("UCS", "GBFS","A*");
-            Set<String> dict = DictionaryLoader.loadDictionary("src/main/resources/main/tucil_13522019/Dict.txt");
+            dict = DictionaryLoader.loadDictionary("src/main/resources/main/tucil_13522019/Dict.txt");
             wordLadderGreedy = new WordLadderGreedy(dict);
             wordLadderUCS = new WordLadderUCS(dict);
             wordLadderAStar = new WordLadderAStar(dict);
@@ -74,7 +79,9 @@ public class MainController {
     }
     @FXML
     private void findPath() {
-        long startTime = System.nanoTime();  // Start timing
+        Runtime runtime = Runtime.getRuntime();
+        long startMemoryUsage = runtime.totalMemory() - runtime.freeMemory();
+        long startTime = System.nanoTime();  
         try {
             switch (selectedAlgorithm) {
                 case "UCS":
@@ -87,21 +94,23 @@ public class MainController {
                     result = wordLadderAStar.findLadder(startWord, endWord);
                     break;
                 default:
-                    throw new IllegalArgumentException("Invalid algorithm selection");
+                    messageLabel.setText(String.format("Please Select An Algorithm"));
+                    break;
             }
-            long endTime = System.nanoTime();  // End timing
-            long duration = (endTime - startTime) / 1_000_000;  // Convert nanoseconds to milliseconds
-
+            long endTime = System.nanoTime();  
+            long duration = (endTime - startTime) / 1_000_000; 
+            long endMemoryUsage = runtime.totalMemory() - runtime.freeMemory();
+            long memoryUsed = (endMemoryUsage - startMemoryUsage);  
             List<String> path = result.getKey();
             int nodesVisited = result.getValue();
             if (path.isEmpty()) {
-                messageLabel.setText("No ladder found. Time taken: " + duration + " ms");
+                messageLabel.setText(String.format("No ladder found."));
                 return;
             }
             updateResultGrid(path);
-            messageLabel.setText("Found ladder with " + nodesVisited + " nodes visited. Time taken: " + duration + " ms");
+            messageLabel.setText(String.format("Found ladder with %d nodes visited. Time taken: %d ms. Memory used: %d bytes", nodesVisited, duration, memoryUsed));
         } catch (Exception e) {
-            messageLabel.setText("Failed to find ladder: " + e.getMessage());
+            messageLabel.setText(String.format("Please Select An Algorithm"));
         }
     }
     private void updateResultGrid(List<String> results) {
@@ -109,32 +118,44 @@ public class MainController {
         if (results.isEmpty()) return;
     
         int numRows = results.size();
-        int numCols = results.stream().mapToInt(String::length).max().orElse(0);
+        int numCols = results.stream().mapToInt(String::length).max().orElse(0) + 1; 
         resultGrid.getColumnConstraints().clear();
-        for (int col = 0; col < numCols; col++) {
-            ColumnConstraints cc = new ColumnConstraints(50);
+    
+        // First column for the numbers
+        ColumnConstraints numberColumn = new ColumnConstraints(50); 
+        resultGrid.getColumnConstraints().add(numberColumn);
+    
+        // Columns for each character in the words
+        for (int col = 0; col < numCols - 1; col++) {
+            ColumnConstraints cc = new ColumnConstraints(80); 
             resultGrid.getColumnConstraints().add(cc);
         }
     
         resultGrid.getRowConstraints().clear();
         for (int row = 0; row < numRows; row++) {
-            RowConstraints rc = new RowConstraints(50);
+            RowConstraints rc = new RowConstraints(80); 
             resultGrid.getRowConstraints().add(rc);
         }
     
         for (int i = 0; i < numRows; i++) {
             String word = results.get(i);
-            // System.out.println(word);
+            TextField rowLabel = new TextField(String.valueOf(i + 1));
+            rowLabel.setEditable(false);
+            rowLabel.setAlignment(Pos.CENTER);
+            rowLabel.setMinWidth(100);
+            rowLabel.setMinHeight(80);
+            rowLabel.setFont(Font.font("Cooper Black", 36));
+            rowLabel.setStyle("-fx-background-color: transparent; -fx-text-fill: #2A8278;"); 
+            resultGrid.add(rowLabel, 0, i);
+    
             for (int j = 0; j < word.length(); j++) {
-                // System.out.println("Adding text: " + word.charAt(j));
                 TextField textField = new TextField(Character.toString(word.charAt(j)).toUpperCase());
                 textField.setEditable(false);
                 textField.setAlignment(Pos.CENTER);
-                textField.setMinWidth(80);  
-                textField.setMinHeight(80);  
+                textField.setMinWidth(80);
+                textField.setMinHeight(80);
                 textField.setFont(Font.font("Cooper Black", 36));
-                resultGrid.add(textField, j, i);
-                // textField.setStyle("-fx-text-fill: white; -fx-control-inner-background: #333;");
+                resultGrid.add(textField, j + 1, i); 
             }
         }
     }

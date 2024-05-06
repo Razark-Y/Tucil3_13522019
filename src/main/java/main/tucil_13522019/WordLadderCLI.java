@@ -11,8 +11,9 @@ public class WordLadderCLI {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        Set<String> dict = null;
         try {
-            Set<String> dict = DictionaryLoader.loadDictionary("../resources/main/tucil_13522019/Dict.txt");
+            dict = DictionaryLoader.loadDictionary("../resources/main/tucil_13522019/Dict.txt");
             wordLadderGreedy = new WordLadderGreedy(dict);
             wordLadderUCS = new WordLadderUCS(dict);
             wordLadderAStar = new WordLadderAStar(dict);
@@ -28,11 +29,14 @@ public class WordLadderCLI {
         System.out.println("Please enter the end word:");
         String endWord = scanner.nextLine().trim().toLowerCase();
 
-        if (startWord.isEmpty() || endWord.isEmpty()) {
-            System.out.println("Error: Both fields must be filled.");
+        if (startWord.isEmpty() || endWord.isEmpty() || !dict.contains(startWord) || !dict.contains(endWord)) {
+            System.out.println("Error: Both fields must be filled and words must be in the dictionary.");
             return;
         }
-
+        if (!dict.contains(startWord) || !dict.contains(endWord)) {
+            System.out.println("Error: Both start and end words must be in the dictionary.");
+            return;
+        }
         if (startWord.length() != endWord.length()) {
             System.out.println("Error: Words must be of the same length.");
             return;
@@ -51,7 +55,10 @@ public class WordLadderCLI {
     }
 
     private static SimpleEntry<List<String>, Integer> findPath(String algorithm, String start, String end) {
+        Runtime runtime = Runtime.getRuntime();
+        long startMemory = runtime.totalMemory() - runtime.freeMemory();
         long startTime = System.nanoTime();
+
         SimpleEntry<List<String>, Integer> result;
 
         switch (algorithm.toUpperCase()) {
@@ -65,12 +72,18 @@ public class WordLadderCLI {
                 result = wordLadderAStar.findLadder(start, end);
                 break;
             default:
-                throw new IllegalArgumentException("Invalid algorithm selection");
+                System.err.println("Invalid algorithm selection. Please choose either UCS, GBFS, or A*.");
+                return new SimpleEntry<>(Collections.emptyList(), 0);
         }
 
         long endTime = System.nanoTime();
-        long duration = (endTime - startTime) / 1_000_000;  // Convert nanoseconds to milliseconds
+        long endMemory = runtime.totalMemory() - runtime.freeMemory();
+        long duration = (endTime - startTime) / 1_000_000;  
+        long memoryUsed = (endMemory - startMemory);  
+
         System.out.println("Time taken: " + duration + " ms");
+        System.out.println("Memory used: " + memoryUsed + " bytes");
+
         return result;
     }
 }
