@@ -48,25 +48,6 @@ public SimpleEntry<List<String>, Integer> findLadder(String start, String end) {
         }
         return path;
     }
-    private Set<String> getNeighbors(String word) {
-        Set<String> neighbors = new HashSet<>();
-        char[] chars = word.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            char originalChar = chars[i];
-            for (char c = 'a'; c <= 'z'; c++) {
-                if (c != originalChar) {
-                    chars[i] = c;
-                    String newWord = new String(chars);
-                    if (dictionary.contains(newWord)) {
-                        neighbors.add(newWord);
-                    }
-                }
-            }
-            chars[i] = originalChar; 
-        }
-        // System.out.println(neighbors);
-        return neighbors;
-    }
     private static class Node {
         String word;
         Node parent;

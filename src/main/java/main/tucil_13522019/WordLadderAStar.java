@@ -33,26 +33,6 @@ public class WordLadderAStar extends WordLadder {
         }
         return word.length() - greens;
     }
-
-    private List<String> generateNeighbors(String word) {
-        List<String> neighbors = new ArrayList<>();
-        char[] chars = word.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            char original = chars[i];
-            for (char c = 'a'; c <= 'z'; c++) {
-                if (c != original) {
-                    chars[i] = c;
-                    String newWord = new String(chars);
-                    if (dictionary.contains(newWord)) {
-                        neighbors.add(newWord);
-                    }
-                }
-            }
-            chars[i] = original;
-        }
-        return neighbors;
-    }
-
     public SimpleEntry<List<String>, Integer> findLadder(String start, String end) {
         if (start.equals(end)) {
             return new SimpleEntry<>(Collections.singletonList(start), 0);
@@ -74,7 +54,7 @@ public class WordLadderAStar extends WordLadder {
                 return new SimpleEntry<>(buildPath(current), nodesVisited);
             }
 
-            List<String> neighbors = generateNeighbors(current.word);
+            List<String> neighbors = getNeighbors(current.word);
             for (String neighbor : neighbors) {
                 int tentativeG = current.g + 1;
                 if (!bestCosts.containsKey(neighbor) || tentativeG < bestCosts.get(neighbor)) {
