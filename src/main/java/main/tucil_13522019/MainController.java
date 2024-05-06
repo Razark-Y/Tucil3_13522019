@@ -20,6 +20,7 @@ public class MainController {
     private static WordLadder wordLadder;
     private static WordLadderGreedy wordLadderGreedy;
     private static WordLadderUCS wordLadderUCS;
+    private static WordLadderAStar wordLadderAStar;
     String selectedAlgorithm;
     String startWord;
     String endWord;
@@ -62,10 +63,11 @@ public class MainController {
     @FXML
     private void initialize(){
         try{
-            algorithmChoice.getItems().addAll("UCS", "GBFS");
+            algorithmChoice.getItems().addAll("UCS", "GBFS","A*");
             Set<String> dict = DictionaryLoader.loadDictionary("src/main/resources/main/tucil_13522019/Dict.txt");
             wordLadderGreedy = new WordLadderGreedy(dict);
             wordLadderUCS = new WordLadderUCS(dict);
+            wordLadderAStar = new WordLadderAStar(dict);
         }catch (IOException e){
             messageLabel.setText("Dictionary Not Set Properly");
         }
@@ -81,9 +83,9 @@ public class MainController {
                 case "GBFS":
                     result = wordLadderGreedy.findLadder(startWord, endWord);
                     break;
-                // case "A*":
-                //     result = wordLadderAStar.findLadder(startWord, endWord);
-                //     break;
+                case "A*":
+                    result = wordLadderAStar.findLadder(startWord, endWord);
+                    break;
                 default:
                     throw new IllegalArgumentException("Invalid algorithm selection");
             }
