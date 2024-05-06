@@ -18,3 +18,13 @@
     -fx-prompt-text-fill: #CCCCCC;
     
 }
+.combo-box {
+    -fx-background-color: #2A8278;
+    -fx-text-fill: white; 
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #0c4d46; 
+    -fx-text-fill: white; 
+    -fx-font-family: 'Cooper Black';
+}

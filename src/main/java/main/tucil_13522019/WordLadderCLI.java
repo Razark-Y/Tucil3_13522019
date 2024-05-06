@@ -9,7 +9,7 @@ public class WordLadderCLI {
     private static WordLadderUCS wordLadderUCS;
     private static WordLadderAStar wordLadderAStar;
     private static Scanner scanner = new Scanner(System.in);
-
+    private static long endMemory;
     public static void main(String[] args) {
         Set<String> dict = null;
         try {
@@ -56,28 +56,28 @@ public class WordLadderCLI {
 
     private static SimpleEntry<List<String>, Integer> findPath(String algorithm, String start, String end) {
         Runtime runtime = Runtime.getRuntime();
-        long startMemory = runtime.totalMemory() - runtime.freeMemory();
+        System.gc();
         long startTime = System.nanoTime();
-
         SimpleEntry<List<String>, Integer> result;
-
+        long startMemory = runtime.totalMemory() - runtime.freeMemory();
         switch (algorithm.toUpperCase()) {
             case "UCS":
                 result = wordLadderUCS.findLadder(start, end);
+                endMemory = runtime.totalMemory() - runtime.freeMemory();
                 break;
             case "GBFS":
                 result = wordLadderGreedy.findLadder(start, end);
+                endMemory = runtime.totalMemory() - runtime.freeMemory();
                 break;
             case "A*":
                 result = wordLadderAStar.findLadder(start, end);
+                endMemory = runtime.totalMemory() - runtime.freeMemory();
                 break;
             default:
                 System.err.println("Invalid algorithm selection. Please choose either UCS, GBFS, or A*.");
                 return new SimpleEntry<>(Collections.emptyList(), 0);
         }
-
         long endTime = System.nanoTime();
-        long endMemory = runtime.totalMemory() - runtime.freeMemory();
         long duration = (endTime - startTime) / 1_000_000;  
         long memoryUsed = (endMemory - startMemory);  
 
