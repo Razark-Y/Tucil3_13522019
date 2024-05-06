@@ -13,7 +13,7 @@ public class WordLadderCLI {
     public static void main(String[] args) {
         Set<String> dict = null;
         try {
-            dict = DictionaryLoader.loadDictionary("../resources/main/tucil_13522019/Dict.txt");
+            dict = DictionaryLoader.loadDictionary("src/main/resources/main/tucil_13522019/Dict.txt");
             wordLadderGreedy = new WordLadderGreedy(dict);
             wordLadderUCS = new WordLadderUCS(dict);
             wordLadderAStar = new WordLadderAStar(dict);
