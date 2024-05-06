@@ -116,27 +116,20 @@ public class MainController {
     private void updateResultGrid(List<String> results) {
         resultGrid.getChildren().clear();
         if (results.isEmpty()) return;
-    
         int numRows = results.size();
         int numCols = results.stream().mapToInt(String::length).max().orElse(0) + 1; 
         resultGrid.getColumnConstraints().clear();
-    
-        // First column for the numbers
         ColumnConstraints numberColumn = new ColumnConstraints(50); 
         resultGrid.getColumnConstraints().add(numberColumn);
-    
-        // Columns for each character in the words
         for (int col = 0; col < numCols - 1; col++) {
             ColumnConstraints cc = new ColumnConstraints(80); 
             resultGrid.getColumnConstraints().add(cc);
         }
-    
         resultGrid.getRowConstraints().clear();
         for (int row = 0; row < numRows; row++) {
             RowConstraints rc = new RowConstraints(80); 
             resultGrid.getRowConstraints().add(rc);
         }
-    
         for (int i = 0; i < numRows; i++) {
             String word = results.get(i);
             TextField rowLabel = new TextField(String.valueOf(i + 1));
@@ -147,18 +140,27 @@ public class MainController {
             rowLabel.setFont(Font.font("Cooper Black", 36));
             rowLabel.setStyle("-fx-background-color: transparent; -fx-text-fill: #2A8278;"); 
             resultGrid.add(rowLabel, 0, i);
-    
             for (int j = 0; j < word.length(); j++) {
-                TextField textField = new TextField(Character.toString(word.charAt(j)).toUpperCase());
+                char letter = word.charAt(j);
+                TextField textField = new TextField(String.valueOf(letter).toUpperCase());
                 textField.setEditable(false);
                 textField.setAlignment(Pos.CENTER);
                 textField.setMinWidth(80);
                 textField.setMinHeight(80);
                 textField.setFont(Font.font("Cooper Black", 36));
-                resultGrid.add(textField, j + 1, i); 
+                if (endWord.length() > j && letter == endWord.charAt(j)) {
+                    textField.setStyle("-fx-background-color: #38CB82; -fx-text-fill: white;");
+                } else if (endWord.contains(String.valueOf(letter))) {
+                    textField.setStyle("-fx-background-color: #ffdf00; -fx-text-fill: white;");
+                } else {
+                    textField.setStyle("-fx-background-color: ##2A8278; -fx-text-fill: white;"); 
+                }
+
+                resultGrid.add(textField, j + 1, i);
             }
         }
     }
+
     
     
 
